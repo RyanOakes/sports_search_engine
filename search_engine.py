@@ -1,6 +1,12 @@
 import csv
+import os
 import psycopg2
 
+def clear():
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
 
 def create_table():
     try:
@@ -41,13 +47,40 @@ def talk_to_database(where, order):
     cur.close()
     conn.close()
 
-talk_to_database(where='bagels_served >= ' + input('enter number of bagels served: '), order='wins DESC')
+# talk_to_database(where='bagels_served >= ' + input('enter number of bagels served: '), order='wins DESC')
 
 
-create_table()
+def game():
+    clear()
+    conn = psycopg2.connect("dbname=tennis user=Oakes host=/tmp/")
+    cur = conn.cursor()
+
+    cur.execute('SELECT name FROM rankings')
+    for row in cur.fetchall():
+        print(row[0])
 
 
+    while range(3):
 
+        print("Welcome! Tennis rules!")
+        player_name = input("Gimme a player name:  ")
+
+        cur.execute("SELECT * FROM rankings WHERE name='{}';".format(player_name))
+        print(cur.fetchall())
+
+    clear()
+
+    cur.close()
+    conn.close()
+
+
+game()
+
+
+#print names of players
+cur.execute('SELECT name FROM rankings')
+for row in cur.fetchall():
+    print(row[0])
 
 
 
@@ -70,17 +103,3 @@ create_table()
 # conn.commit()
 # cur.close()
 # conn.close()
-#
-# def
-#
-#
-# with open('students.csv') as f: # automatically closes the file when done
-#     reader = csv.reader(f)
-#     headers = next(reader)
-#     print(headers)
-#     print('------')
-#     for row in reader:
-#         print(row)
-
-
-# conn = psycopg2.connect("dbname=test user=Oakes host=/tmp/")
